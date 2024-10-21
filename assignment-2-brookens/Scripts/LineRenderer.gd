@@ -1,6 +1,3 @@
-// This script needs to be attached to a MeshInstance3D node
-// The MeshInstance3D node needs to have a new ImmediateMesh added to it
-
 extends MeshInstance3D
 
 @export var points = [Vector3(0,0,0),Vector3(0,5,0)]
@@ -15,105 +12,109 @@ extends MeshInstance3D
 
 var camera
 var cameraOrigin
+var is_active
 
 func _ready():
 	pass
+func activate(is_active):
+	is_active = true
+func deactivate(is_active):
+	is_active = false
 
-func _process(delta):z
+func _process(delta):
+	if is_active:
+		if points.size() < 2:
+			return
 	
+		camera = get_viewport().get_camera_3d()
+		if camera == null:
+			return
+		cameraOrigin = to_local(camera.get_global_transform().origin)
 	
-	if points.size() < 2:
-		return
+		var progressStep = 1.0 / points.size();
+		var progress = 0;
+		var thickness = lerp(startThickness, endThickness, progress);
+		var nextThickness = lerp(startThickness, endThickness, progress + progressStep);
 	
-	camera = get_viewport().get_camera_3d()
-	if camera == null:
-		return
-	cameraOrigin = to_local(camera.get_global_transform().origin)
+		mesh.clear_surfaces()
+		mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	
-	var progressStep = 1.0 / points.size();
-	var progress = 0;
-	var thickness = lerp(startThickness, endThickness, progress);
-	var nextThickness = lerp(startThickness, endThickness, progress + progressStep);
+		for i in range(points.size() - 1):
+			var A = points[i]
+			var B = points[i+1]
 	
-	mesh.clear_surfaces()
-	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+			if globalCoords:
+				A = to_local(A)
+				B = to_local(B)
 	
-	for i in range(points.size() - 1):
-		var A = points[i]
-		var B = points[i+1]
-	
-		if globalCoords:
-			A = to_local(A)
-			B = to_local(B)
-	
-		var AB = B - A;
-		var orthogonalABStart = (cameraOrigin - ((A + B) / 2)).cross(AB).normalized() * thickness;
-		var orthogonalABEnd = (cameraOrigin - ((A + B) / 2)).cross(AB).normalized() * nextThickness;
+			var AB = B - A;
+			var orthogonalABStart = (cameraOrigin - ((A + B) / 2)).cross(AB).normalized() * thickness;
+			var orthogonalABEnd = (cameraOrigin - ((A + B) / 2)).cross(AB).normalized() * nextThickness;
 		
-		var AtoABStart = A + orthogonalABStart
-		var AfromABStart = A - orthogonalABStart
-		var BtoABEnd = B + orthogonalABEnd
-		var BfromABEnd = B - orthogonalABEnd
+			var AtoABStart = A + orthogonalABStart
+			var AfromABStart = A - orthogonalABStart
+			var BtoABEnd = B + orthogonalABEnd
+			var BfromABEnd = B - orthogonalABEnd
 		
-		if i == 0:
-			if drawCaps:
-				cap(A, B, thickness, capSmooth)
+			if i == 0:
+				if drawCaps:
+					cap(A, B, thickness, capSmooth)
 		
-		if scaleTexture:
-			var ABLen = AB.length()
-			var ABFloor = floor(ABLen)
-			var ABFrac = ABLen - ABFloor
+			if scaleTexture:
+				var ABLen = AB.length()
+				var ABFloor = floor(ABLen)
+				var ABFrac = ABLen - ABFloor
 			
-			mesh.surface_set_uv(Vector2(ABFloor, 0))
-			mesh.surface_add_vertex(AtoABStart)
-			mesh.surface_set_uv(Vector2(-ABFrac, 0))
-			mesh.surface_add_vertex(BtoABEnd)
-			mesh.surface_set_uv(Vector2(ABFloor, 1))
-			mesh.surface_add_vertex(AfromABStart)
-			mesh.surface_set_uv(Vector2(-ABFrac, 0))
-			mesh.surface_add_vertex(BtoABEnd)
-			mesh.surface_set_uv(Vector2(-ABFrac, 1))
-			mesh.surface_add_vertex(BfromABEnd)
-			mesh.surface_set_uv(Vector2(ABFloor, 1))
-			mesh.surface_add_vertex(AfromABStart)
-		else:
-			mesh.surface_set_uv(Vector2(1, 0))
-			mesh.surface_add_vertex(AtoABStart)
-			mesh.surface_set_uv(Vector2(0, 0))
-			mesh.surface_add_vertex(BtoABEnd)
-			mesh.surface_set_uv(Vector2(1, 1))
-			mesh.surface_add_vertex(AfromABStart)
-			mesh.surface_set_uv(Vector2(0, 0))
-			mesh.surface_add_vertex(BtoABEnd)
-			mesh.surface_set_uv(Vector2(0, 1))
-			mesh.surface_add_vertex(BfromABEnd)
-			mesh.surface_set_uv(Vector2(1, 1))
-			mesh.surface_add_vertex(AfromABStart)
+				mesh.surface_set_uv(Vector2(ABFloor, 0))
+				mesh.surface_add_vertex(AtoABStart)
+				mesh.surface_set_uv(Vector2(-ABFrac, 0))
+				mesh.surface_add_vertex(BtoABEnd)
+				mesh.surface_set_uv(Vector2(ABFloor, 1))
+				mesh.surface_add_vertex(AfromABStart)
+				mesh.surface_set_uv(Vector2(-ABFrac, 0))
+				mesh.surface_add_vertex(BtoABEnd)
+				mesh.surface_set_uv(Vector2(-ABFrac, 1))
+				mesh.surface_add_vertex(BfromABEnd)
+				mesh.surface_set_uv(Vector2(ABFloor, 1))
+				mesh.surface_add_vertex(AfromABStart)
+			else:
+				mesh.surface_set_uv(Vector2(1, 0))
+				mesh.surface_add_vertex(AtoABStart)
+				mesh.surface_set_uv(Vector2(0, 0))
+				mesh.surface_add_vertex(BtoABEnd)
+				mesh.surface_set_uv(Vector2(1, 1))
+				mesh.surface_add_vertex(AfromABStart)
+				mesh.surface_set_uv(Vector2(0, 0))
+				mesh.surface_add_vertex(BtoABEnd)
+				mesh.surface_set_uv(Vector2(0, 1))
+				mesh.surface_add_vertex(BfromABEnd)
+				mesh.surface_set_uv(Vector2(1, 1))
+				mesh.surface_add_vertex(AfromABStart)
 		
-		if i == points.size() - 2:
-			if drawCaps:
-				cap(B, A, nextThickness, capSmooth)
-		else:
-			if drawCorners:
-				var C = points[i+2]
-				if globalCoords:
-					C = to_local(C)
+			if i == points.size() - 2:
+				if drawCaps:
+					cap(B, A, nextThickness, capSmooth)
+			else:
+				if drawCorners:
+					var C = points[i+2]
+					if globalCoords:
+						C = to_local(C)
 				
-				var BC = C - B;
-				var orthogonalBCStart = (cameraOrigin - ((B + C) / 2)).cross(BC).normalized() * nextThickness;
+					var BC = C - B;
+					var orthogonalBCStart = (cameraOrigin - ((B + C) / 2)).cross(BC).normalized() * nextThickness;
 				
-				var angleDot = AB.dot(orthogonalBCStart)
+					var angleDot = AB.dot(orthogonalBCStart)
 				
-				if angleDot > 0:
-					corner(B, BtoABEnd, B + orthogonalBCStart, cornerSmooth)
-				else:
-					corner(B, B - orthogonalBCStart, BfromABEnd, cornerSmooth)
+					if angleDot > 0:
+						corner(B, BtoABEnd, B + orthogonalBCStart, cornerSmooth)
+					else:
+						corner(B, B - orthogonalBCStart, BfromABEnd, cornerSmooth)
 		
-		progress += progressStep;
-		thickness = lerp(startThickness, endThickness, progress);
-		nextThickness = lerp(startThickness, endThickness, progress + progressStep);
+			progress += progressStep;
+			thickness = lerp(startThickness, endThickness, progress);
+			nextThickness = lerp(startThickness, endThickness, progress + progressStep);
 	
-	mesh.surface_end()
+		mesh.surface_end()
 
 func cap(center, pivot, thickness, smoothing):
 	var orthogonal = (cameraOrigin - center).cross(center - pivot).normalized() * thickness;

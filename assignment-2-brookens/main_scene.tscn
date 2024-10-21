@@ -1,7 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://ddmvnxclddyf2"]
+[gd_scene load_steps=12 format=3 uid="uid://ddmvnxclddyf2"]
 
-[ext_resource type="Script" path="res://Scripts/Controller.gd" id="1_socsj"]
-[ext_resource type="Script" path="res://Scripts/ControllerInteraction.gd" id="2_d51lb"]
+[ext_resource type="Script" path="res://Scripts/CubeSpawner.gd" id="1_sriak"]
+[ext_resource type="Script" path="res://Scripts/LeftControllerInteraction.gd" id="2_d51lb"]
 [ext_resource type="PackedScene" uid="uid://cnwp7ndjr4s8y" path="res://Quest2Controllers/Quest2Controllers/OculusQuest2TouchController_Left.gltf" id="3_gf1yl"]
 [ext_resource type="Material" uid="uid://l2sl4ucg3wu1" path="res://Materials/LeftLaser.tres" id="3_iccyn"]
 [ext_resource type="PackedScene" uid="uid://bc8lh0rihgxvi" path="res://Quest2Controllers/Quest2Controllers/OculusQuest2TouchController_Right.gltf" id="4_7et68"]
@@ -16,12 +16,10 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_rlpvl"]
 size = Vector3(10, 0.01, 10)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_cce5f"]
-
 [node name="MainScene" type="Node3D"]
 
 [node name="XROrigin3D" type="XROrigin3D" parent="."]
-script = ExtResource("1_socsj")
+script = ExtResource("1_sriak")
 
 [node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
 
@@ -70,13 +68,8 @@ shape = SubResource("BoxShape3D_rlpvl")
 disabled = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="XROrigin3D/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.21354)
 material_override = ExtResource("7_vfwbh")
-size = Vector3(10, 0.01, 10)
+size = Vector3(10, 0.01, 10.374)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="XROrigin3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.26108, 0.500644, -2.38823)
-
-[node name="box" type="CSGBox3D" parent="XROrigin3D/StaticBody3D"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/StaticBody3D"]
-shape = SubResource("BoxShape3D_cce5f")
+[node name="Music" type="AudioStreamPlayer" parent="XROrigin3D"]
