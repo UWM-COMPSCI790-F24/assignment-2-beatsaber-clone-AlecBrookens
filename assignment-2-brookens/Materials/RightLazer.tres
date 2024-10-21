@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://vell875gdcyq"]
+
+[resource]
+transparency = 1
+albedo_color = Color(0.07, 0.2095, 1, 0.776471)
+emission_enabled = true
+emission = Color(0.1848, 0.26124, 0.84, 1)

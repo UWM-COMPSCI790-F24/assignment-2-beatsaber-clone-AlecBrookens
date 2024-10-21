@@ -1,0 +1,82 @@
+[gd_scene load_steps=13 format=3 uid="uid://ddmvnxclddyf2"]
+
+[ext_resource type="Script" path="res://Scripts/Controller.gd" id="1_socsj"]
+[ext_resource type="Script" path="res://Scripts/ControllerInteraction.gd" id="2_d51lb"]
+[ext_resource type="PackedScene" uid="uid://cnwp7ndjr4s8y" path="res://Quest2Controllers/Quest2Controllers/OculusQuest2TouchController_Left.gltf" id="3_gf1yl"]
+[ext_resource type="Material" uid="uid://l2sl4ucg3wu1" path="res://Materials/LeftLaser.tres" id="3_iccyn"]
+[ext_resource type="PackedScene" uid="uid://bc8lh0rihgxvi" path="res://Quest2Controllers/Quest2Controllers/OculusQuest2TouchController_Right.gltf" id="4_7et68"]
+[ext_resource type="Material" uid="uid://vell875gdcyq" path="res://Materials/RightLazer.tres" id="5_pkg00"]
+[ext_resource type="AudioStream" uid="uid://u5p0igk6u0nx" path="res://Audio/balloon-pop-48030.mp3" id="5_v1lrm"]
+[ext_resource type="Material" uid="uid://4r6p51jld0fc" path="res://Materials/Floor.tres" id="7_vfwbh"]
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_htdlr"]
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_ns8d1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rlpvl"]
+size = Vector3(10, 0.01, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cce5f"]
+
+[node name="MainScene" type="Node3D"]
+
+[node name="XROrigin3D" type="XROrigin3D" parent="."]
+script = ExtResource("1_socsj")
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+
+[node name="LeftController" type="XRController3D" parent="XROrigin3D"]
+tracker = &"left_hand"
+script = ExtResource("2_d51lb")
+
+[node name="LineRenderer" type="MeshInstance3D" parent="XROrigin3D/LeftController"]
+material_override = ExtResource("3_iccyn")
+mesh = SubResource("ImmediateMesh_htdlr")
+skeleton = NodePath("../../..")
+script = ExtResource("2_d51lb")
+
+[node name="OculusQuest2TouchController_Left" parent="XROrigin3D/LeftController" instance=ExtResource("3_gf1yl")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="RayCast3D" type="RayCast3D" parent="XROrigin3D/LeftController"]
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="Popper" type="AudioStreamPlayer" parent="XROrigin3D/LeftController"]
+stream = ExtResource("5_v1lrm")
+
+[node name="RightController" type="XRController3D" parent="XROrigin3D"]
+tracker = &"right_hand"
+
+[node name="LineRenderer" type="MeshInstance3D" parent="XROrigin3D/RightController"]
+material_override = ExtResource("5_pkg00")
+mesh = SubResource("ImmediateMesh_ns8d1")
+script = ExtResource("2_d51lb")
+
+[node name="OculusQuest2TouchController_Right" parent="XROrigin3D/RightController" instance=ExtResource("4_7et68")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="RayCast3D" type="RayCast3D" parent="XROrigin3D/RightController"]
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="Popper" type="AudioStreamPlayer" parent="XROrigin3D/RightController"]
+stream = ExtResource("5_v1lrm")
+
+[node name="Floor" type="StaticBody3D" parent="XROrigin3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/Floor"]
+shape = SubResource("BoxShape3D_rlpvl")
+disabled = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="XROrigin3D/Floor"]
+material_override = ExtResource("7_vfwbh")
+size = Vector3(10, 0.01, 10)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.26108, 0.500644, -2.38823)
+
+[node name="box" type="CSGBox3D" parent="XROrigin3D/StaticBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/StaticBody3D"]
+shape = SubResource("BoxShape3D_cce5f")
