@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ddmvnxclddyf2"]
+[gd_scene load_steps=13 format=3 uid="uid://ddmvnxclddyf2"]
 
 [ext_resource type="Script" path="res://Scripts/CubeSpawner.gd" id="1_sriak"]
 [ext_resource type="Script" path="res://Scripts/LeftControllerInteraction.gd" id="2_d51lb"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bc8lh0rihgxvi" path="res://Quest2Controllers/Quest2Controllers/OculusQuest2TouchController_Right.gltf" id="4_7et68"]
 [ext_resource type="Material" uid="uid://vell875gdcyq" path="res://Materials/RightLazer.tres" id="5_pkg00"]
 [ext_resource type="AudioStream" uid="uid://u5p0igk6u0nx" path="res://Audio/balloon-pop-48030.mp3" id="5_v1lrm"]
+[ext_resource type="Script" path="res://Scripts/RightControllerInteraction.gd" id="6_fx14k"]
 [ext_resource type="Material" uid="uid://4r6p51jld0fc" path="res://Materials/Floor.tres" id="7_vfwbh"]
 
 [sub_resource type="ImmediateMesh" id="ImmediateMesh_htdlr"]
@@ -31,7 +32,6 @@ script = ExtResource("2_d51lb")
 material_override = ExtResource("3_iccyn")
 mesh = SubResource("ImmediateMesh_htdlr")
 skeleton = NodePath("../../..")
-script = ExtResource("2_d51lb")
 
 [node name="OculusQuest2TouchController_Left" parent="XROrigin3D/LeftController" instance=ExtResource("3_gf1yl")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
@@ -45,11 +45,11 @@ stream = ExtResource("5_v1lrm")
 
 [node name="RightController" type="XRController3D" parent="XROrigin3D"]
 tracker = &"right_hand"
+script = ExtResource("6_fx14k")
 
 [node name="LineRenderer" type="MeshInstance3D" parent="XROrigin3D/RightController"]
 material_override = ExtResource("5_pkg00")
 mesh = SubResource("ImmediateMesh_ns8d1")
-script = ExtResource("2_d51lb")
 
 [node name="OculusQuest2TouchController_Right" parent="XROrigin3D/RightController" instance=ExtResource("4_7et68")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
