@@ -3,7 +3,7 @@ extends Node3D
 # Variables for controlling the cube generation and movement
 @export var cube_size = 0.3
 @export var z_position = 12.0
-@export var move_speed = 2.0
+@export var move_speed = 1.75
 @export var y_min = 0.4
 @export var y_max = 2.0
 @export var x_range = 2.0

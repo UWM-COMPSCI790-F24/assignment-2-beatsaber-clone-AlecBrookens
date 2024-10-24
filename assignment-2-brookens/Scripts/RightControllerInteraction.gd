@@ -10,17 +10,17 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	var start = global_position + (-global_basis.z * 0.05)
 	var end = (-global_basis.z) + start
-	if is_button_pressed("A"):
+	if is_button_pressed("ax_button"):
 		if lazer_Toggle == true:
 			lazer_Toggle = false
 		if lazer_Toggle == false:
 			lazer_Toggle = true
 	
 	if lazer_Toggle == true:
-		$"LineRenderer".activate()
+		$"LineRenderer".activate(true)
 		$"LineRenderer".points[0] = start
 		$"LineRenderer".points[1] = end
-		$"RayCast3D".target_position = $"Raycast3D".to_local(end)
+		$"RayCast3D".target_position = $"RayCast3D".to_local(end)
 	
 		if $"RayCast3D".is_colliding():
 			current_Collider  = $"RayCast3D".get_collider()
