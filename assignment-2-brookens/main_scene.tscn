@@ -1,15 +1,16 @@
-[gd_scene load_steps=15 format=3 uid="uid://ddmvnxclddyf2"]
+[gd_scene load_steps=16 format=3 uid="uid://ddmvnxclddyf2"]
 
+[ext_resource type="Script" path="res://Scripts/XRStartup.gd" id="1_04l5s"]
 [ext_resource type="Script" path="res://Scripts/CubeSpawner.gd" id="1_sriak"]
-[ext_resource type="Script" path="res://Scripts/LeftControllerInteraction.gd" id="2_d51lb"]
+[ext_resource type="Script" path="res://Scripts/ControllerInteraction.gd" id="2_d51lb"]
 [ext_resource type="PackedScene" uid="uid://cnwp7ndjr4s8y" path="res://Quest2Controllers/Quest2Controllers/OculusQuest2TouchController_Left.gltf" id="3_gf1yl"]
 [ext_resource type="Material" uid="uid://l2sl4ucg3wu1" path="res://Materials/LeftLaser.tres" id="3_iccyn"]
 [ext_resource type="PackedScene" uid="uid://bc8lh0rihgxvi" path="res://Quest2Controllers/Quest2Controllers/OculusQuest2TouchController_Right.gltf" id="4_7et68"]
 [ext_resource type="Script" path="res://Scripts/LineRenderer.gd" id="4_emc2v"]
 [ext_resource type="Material" uid="uid://vell875gdcyq" path="res://Materials/RightLazer.tres" id="5_pkg00"]
 [ext_resource type="AudioStream" uid="uid://u5p0igk6u0nx" path="res://Audio/balloon-pop-48030.mp3" id="5_v1lrm"]
-[ext_resource type="Script" path="res://Scripts/RightControllerInteraction.gd" id="6_fx14k"]
 [ext_resource type="Material" uid="uid://4r6p51jld0fc" path="res://Materials/Floor.tres" id="7_vfwbh"]
+[ext_resource type="AudioStream" uid="uid://bjucvwxh1y4q6" path="res://Audio/night-detective-226857.mp3" id="11_bmwcy"]
 
 [sub_resource type="ImmediateMesh" id="ImmediateMesh_htdlr"]
 
@@ -21,9 +22,9 @@ size = Vector3(10, 0.01, 10)
 [sub_resource type="Environment" id="Environment_tyky3"]
 
 [node name="MainScene" type="Node3D"]
-script = ExtResource("1_sriak")
 
 [node name="XROrigin3D" type="XROrigin3D" parent="."]
+script = ExtResource("1_04l5s")
 
 [node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.41387, 0)
@@ -38,27 +39,25 @@ mesh = SubResource("ImmediateMesh_htdlr")
 skeleton = NodePath("../../..")
 script = ExtResource("4_emc2v")
 
-[node name="OculusQuest2TouchController_Left" parent="XROrigin3D/LeftController" instance=ExtResource("3_gf1yl")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
-
 [node name="RayCast3D" type="RayCast3D" parent="XROrigin3D/LeftController"]
+collision_mask = 2
 collide_with_areas = true
 collide_with_bodies = false
 
 [node name="Popper" type="AudioStreamPlayer" parent="XROrigin3D/LeftController"]
 stream = ExtResource("5_v1lrm")
 
+[node name="OculusQuest2TouchController_Left2" parent="XROrigin3D/LeftController" instance=ExtResource("3_gf1yl")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
 [node name="RightController" type="XRController3D" parent="XROrigin3D"]
 tracker = &"right_hand"
-script = ExtResource("6_fx14k")
+script = ExtResource("2_d51lb")
 
 [node name="LineRenderer" type="MeshInstance3D" parent="XROrigin3D/RightController"]
 material_override = ExtResource("5_pkg00")
 mesh = SubResource("ImmediateMesh_ns8d1")
 script = ExtResource("4_emc2v")
-
-[node name="OculusQuest2TouchController_Right" parent="XROrigin3D/RightController" instance=ExtResource("4_7et68")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="RayCast3D" type="RayCast3D" parent="XROrigin3D/RightController"]
 collide_with_areas = true
@@ -66,6 +65,9 @@ collide_with_bodies = false
 
 [node name="Popper" type="AudioStreamPlayer" parent="XROrigin3D/RightController"]
 stream = ExtResource("5_v1lrm")
+
+[node name="OculusQuest2TouchController_Right2" parent="XROrigin3D/RightController" instance=ExtResource("4_7et68")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="Floor" type="StaticBody3D" parent="XROrigin3D"]
 
@@ -78,9 +80,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.21354)
 material_override = ExtResource("7_vfwbh")
 size = Vector3(10, 0.01, 10.374)
 
-[node name="Music" type="AudioStreamPlayer" parent="XROrigin3D"]
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_tyky3")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(0.970118, 0.237398, -0.0501314, 0, 0.206614, 0.978423, 0.242633, -0.949185, 0.20044, 0, 0, 0)
+light_color = Color(0.8, 1, 0.996667, 1)
+
+[node name="CubeSpawnerEmpty" type="Node3D" parent="."]
+script = ExtResource("1_sriak")
+
+[node name="Music" type="AudioStreamPlayer" parent="CubeSpawnerEmpty"]
+stream = ExtResource("11_bmwcy")
+
+[node name="Popper2" type="AudioStreamPlayer" parent="CubeSpawnerEmpty"]
+stream = ExtResource("5_v1lrm")
+
+[connection signal="button_pressed" from="XROrigin3D/LeftController" to="XROrigin3D/LeftController" method="_on_button_pressed"]
+[connection signal="button_pressed" from="XROrigin3D/RightController" to="XROrigin3D/RightController" method="_on_button_pressed"]

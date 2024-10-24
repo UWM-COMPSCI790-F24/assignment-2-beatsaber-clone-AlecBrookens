@@ -12,17 +12,13 @@ extends MeshInstance3D
 
 var camera
 var cameraOrigin
-var is_active
+var is_active = true
 
 func _ready():
 	pass
-func activate(is_active):
-	is_active = true
-func deactivate(is_active):
-	is_active = false
 
 func _process(delta):
-	if is_active:
+	#if is_active:
 		if points.size() < 2:
 			return
 	
